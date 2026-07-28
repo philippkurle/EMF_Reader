@@ -4,6 +4,9 @@ bool buzzerEnabled = false;
 bool lastRawButtonState = HIGH;
 bool lastButtonState = HIGH;    // HIGH = not pressed, since INPUT_PULLUP
 
+bool buzzerPinState = false;
+uint32_t lastBuzzerToggle_ms = 0; 
+
 uint32_t lastDebounceTime_ms = 0;
 const uint8_t DEBOUNCE_DELAY_ms = 50;
 
@@ -45,7 +48,10 @@ void loop() {
 
   updateAntenna(now_ms);
   updateLED(now_ms);
-  updateBuzzer(now_ms);
+
+  if (buzzerEnabled) {
+    updateBuzzer(now_ms);
+  }
 }
 
 // function definitions:
@@ -58,7 +64,8 @@ void beginLED() {
 }
 
 void beginBuzzer() {
-
+  pinMode(PIN_BUZZER, OUTPUT);
+  digitalWrite(PIN_BUZZER, HIGH);
 }
 
 bool readButton(uint32_t now_ms) {
@@ -90,5 +97,8 @@ void updateLED(uint32_t now_ms) {
 }
 
 void updateBuzzer(uint32_t now_ms) {
-
+  if (!buzzerEnabled | fieldStrength == 1) {
+    digitalWrite(PIN_BUZZER, HIGH);
+    return;
+  }
 }
