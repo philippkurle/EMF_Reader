@@ -25,7 +25,7 @@ const uint8_t OFF_TIME_LEVEL_3 = 180;
 const uint8_t OFF_TIME_LEVEL_4 = 80;
 const uint8_t OFF_TIME_LEVEL_5 = 30;
 
-uint8_t currentLevel = 0;
+uint8_t currentLevel = 1;
 
 bool lastAntennaState = LOW;
 uint16_t pulseCount = 0;
