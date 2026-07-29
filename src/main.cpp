@@ -56,6 +56,7 @@ int levelUpThreshold(uint8_t level);
 int levelDownThreshold(uint8_t level);
 
 void setup() {
+  Serial.begin(9600);
 
   pinMode(PIN_BUTTON, INPUT_PULLUP);
 
@@ -65,6 +66,8 @@ void setup() {
 }
 
 void loop() {
+  Serial.println(currentLevel);
+
   uint32_t now_ms = millis();
 
   readButton(now_ms);
@@ -88,11 +91,14 @@ void beginLED() {
 
 void beginBuzzer() {
   pinMode(PIN_BUZZER, OUTPUT);
-  digitalWrite(PIN_BUZZER, HIGH);
+  digitalWrite(PIN_BUZZER, LOW);
 }
 
 bool readButton(uint32_t now_ms) {
   bool rawState = digitalRead(PIN_BUTTON);
+
+  // Serial.print(F("button input: "));
+  // Serial.println(rawState);
 
   if (rawState!= lastRawButtonState) {
     lastDebounceTime_ms = now_ms; // reading changed, restart the debounce window
@@ -130,6 +136,10 @@ void updateAntenna(uint32_t now_ms) {
   }
 
   lastAntennaState = antennaState;
+  Serial.print(F("pulseCount: "));
+  Serial.println(pulseCount);
+  Serial.print(F("Antenna PIN: "));
+  Serial.println(digitalRead(PIN_ANTENNA));
 }
 
 void updateLED(uint32_t now_ms) {
@@ -144,7 +154,7 @@ void updateLED(uint32_t now_ms) {
 
 void updateBuzzer(uint32_t now_ms) {
   if (!buzzerEnabled || currentLevel <= 1) {
-    digitalWrite(PIN_BUZZER, HIGH);
+    digitalWrite(PIN_BUZZER, LOW); // LOW -> off
     return;
   }
 
@@ -167,7 +177,7 @@ void updateBuzzer(uint32_t now_ms) {
 
   if ((now_ms - lastBuzzerToggle_ms) >= threshold) {
     buzzerPinState = !buzzerPinState;
-    digitalWrite(PIN_BUZZER, buzzerPinState ? LOW : HIGH);
+    digitalWrite(PIN_BUZZER, buzzerPinState ? HIGH : LOW);
     lastBuzzerToggle_ms = now_ms;
   }
 }
