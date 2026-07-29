@@ -133,7 +133,13 @@ void updateAntenna(uint32_t now_ms) {
 }
 
 void updateLED(uint32_t now_ms) {
-
+  for (uint8_t i = 0; i < NUM_LEDS; i++) {
+    if (i < currentLevel) {
+      digitalWrite(LED_PINS[i], HIGH);
+    } else {
+      digitalWrite(LED_PINS[i], LOW);
+    }
+  } 
 }
 
 void updateBuzzer(uint32_t now_ms) {
