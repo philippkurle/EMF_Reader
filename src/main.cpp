@@ -38,6 +38,9 @@ const uint8_t LEVEL4_THRESHOLD = 30;
 const uint8_t LEVEL5_THRESHOLD = 40;
 const uint8_t HYSTERESIS_GAP = 3;
 
+const uint8_t LED_PINS[] = {PIN_LED_LEVEL_1, PIN_LED_LEVEL_2, PIN_LED_LEVEL_3, PIN_LED_LEVEL_4, PIN_LED_LEVEL_5};
+const uint8_t NUM_LEDS = 5;
+
 // function declarations:
 void beginAntenna();
 void beginLED();
@@ -48,6 +51,9 @@ bool readButton(uint32_t now_ms);
 void updateAntenna(uint32_t now_ms);
 void updateLED(uint32_t now_ms);
 void updateBuzzer(uint32_t now_ms);
+
+int levelUpThreshold(uint8_t level);
+int levelDownThreshold(uint8_t level);
 
 void setup() {
 
@@ -74,16 +80,10 @@ void beginAntenna() {
 }
 
 void beginLED() {
-  pinMode(PIN_LED_LEVEL_1, OUTPUT);
-  digitalWrite(PIN_LED_LEVEL_1, LOW);
-  pinMode(PIN_LED_LEVEL_2, OUTPUT);
-  digitalWrite(PIN_LED_LEVEL_2, LOW);
-  pinMode(PIN_LED_LEVEL_3, OUTPUT);
-  digitalWrite(PIN_LED_LEVEL_3, LOW);
-  pinMode(PIN_LED_LEVEL_4, OUTPUT);
-  digitalWrite(PIN_LED_LEVEL_4, LOW);
-  pinMode(PIN_LED_LEVEL_5, OUTPUT);
-  digitalWrite(PIN_LED_LEVEL_5, LOW);
+  for (uint8_t i = 0; i < NUM_LEDS; i++) {
+    pinMode(LED_PINS[i], OUTPUT);
+    digitalWrite(LED_PINS[i], LOW);
+  } 
 }
 
 void beginBuzzer() {
@@ -115,26 +115,21 @@ void updateAntenna(uint32_t now_ms) {
   bool antennaState = digitalRead(PIN_ANTENNA);
   if (antennaState && !lastAntennaState) {
     pulseCount += 1;
-    lastAntennaState = antennaState;
   }
 
   if ((now_ms - windowStart_ms) >= PULSE_WINDOW_ms) {
     // hysteresis
-    if (pulseCount >= LEVEL2_THRESHOLD) {
-      currentLevel = 2;
-    } else if (pulseCount >= LEVEL3_THRESHOLD) {
-      currentLevel = 3;
-    } else if (pulseCount >= LEVEL4_THRESHOLD) {
-      currentLevel = 4;
-    } else if (pulseCount >= LEVEL5_THRESHOLD) {
-      currentLevel = 5;
-    } else if (pulseCount <= LEVEL5_THRESHOLD - HYSTERESIS_GAP) {
-      
+    if (currentLevel < 5 && pulseCount >= levelUpThreshold(currentLevel + 1)) {
+      currentLevel += 1;
+    } else if (currentLevel > 1 && pulseCount <= levelDownThreshold(currentLevel)) {
+      currentLevel -= 1;
     }
 
     pulseCount = 0;
     windowStart_ms = now_ms;
   }
+
+  lastAntennaState = antennaState;
 }
 
 void updateLED(uint32_t now_ms) {
@@ -169,4 +164,32 @@ void updateBuzzer(uint32_t now_ms) {
     digitalWrite(PIN_BUZZER, buzzerPinState ? LOW : HIGH);
     lastBuzzerToggle_ms = now_ms;
   }
+}
+
+int levelUpThreshold(uint8_t level) {
+  switch (level) {
+    case 2:
+      return LEVEL2_THRESHOLD;
+    case 3:
+      return LEVEL3_THRESHOLD;
+    case 4:
+      return LEVEL4_THRESHOLD;
+    case 5:
+      return LEVEL5_THRESHOLD;
+  }
+  return 0;
+}
+
+int levelDownThreshold(uint8_t level) {
+  switch (level) {
+    case 5:
+      return LEVEL5_THRESHOLD - HYSTERESIS_GAP;
+    case 4:
+      return LEVEL4_THRESHOLD - HYSTERESIS_GAP;
+    case 3:
+      return LEVEL3_THRESHOLD - HYSTERESIS_GAP;
+    case 2:
+      return LEVEL2_THRESHOLD - HYSTERESIS_GAP;
+  }
+  return 0;
 }
