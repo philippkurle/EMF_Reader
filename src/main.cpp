@@ -25,12 +25,12 @@ uint8_t currentLevel = 1;
 
 const uint32_t SAMPLE_WINDOW_ms = 100;  // 5 periods of 50 Hz mains per window
 
-// values need to be adjusted for analog readings
-const uint16_t LEVEL2_THRESHOLD = 10;
-const uint16_t LEVEL3_THRESHOLD = 20;
-const uint16_t LEVEL4_THRESHOLD = 30;
-const uint16_t LEVEL5_THRESHOLD = 40;
-const uint16_t HYSTERESIS_GAP = 3;
+// temporary values
+const uint16_t LEVEL2_THRESHOLD = 50;
+const uint16_t LEVEL3_THRESHOLD = 183;
+const uint16_t LEVEL4_THRESHOLD = 316;
+const uint16_t LEVEL5_THRESHOLD = 450;
+const uint16_t HYSTERESIS_GAP = 20;
 
 const uint8_t LED_PINS[] = {PIN_LED_LEVEL_1, PIN_LED_LEVEL_2, PIN_LED_LEVEL_3, PIN_LED_LEVEL_4, PIN_LED_LEVEL_5};
 const uint8_t NUM_LEDS = 5;
