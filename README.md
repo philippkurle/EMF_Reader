@@ -1,17 +1,17 @@
 # EMF Reader
 
-Arduino-Mega-basierter Detektor für elektrische Wechselfelder (50 Hz).
-Feldstärke wird über 5 LEDs und einen zuschaltbaren Piezo-Buzzer angezeigt.
+Arduino Mega–based detector for AC electric fields (50 Hz mains).
+Field strength is displayed on 5 LEDs and an optional piezo buzzer.
 
-## Schaltplan
-![Schaltplan](docs/EMF_reader.svg)
+## Schematic
+![Schematic](docs/EMF_reader.svg)
 
-[Als PDF](docs/EMF_reader.pdf) · KiCad-Projekt in `hardware/`
+[PDF version](docs/EMF_reader.pdf) · KiCad project in `hardware/`
 
-## Funktionsweise
-- Antenne → 2N3904-Verstärkerstufe → A0
-- Peak-to-Peak-Amplitude pro 100-ms-Fenster → Stufe 1–5 (mit Hysterese)
-- Taster (Pin 44) schaltet den Buzzer ein/aus
+## How it works
+- Antenna → 2N3904 amplifier stage → A0
+- Peak-to-peak amplitude per 100 ms window → level 1–5 (with hysteresis)
+- Push button (pin 44) toggles the buzzer on/off
 
 ## Build
-PlatformIO, Board: Arduino Mega 2560
+PlatformIO, board: Arduino Mega 2560
