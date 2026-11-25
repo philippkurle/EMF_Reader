@@ -3,3 +3,13 @@
 .vscode/c_cpp_properties.json
 .vscode/launch.json
 .vscode/ipch
+
+# KiCad
+*-backups/
+*.kicad_prl
+*.lck
+fp-info-cache
+_autosave-*
+
+# VS Code Local History
+.history/
