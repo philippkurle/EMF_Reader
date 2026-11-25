@@ -89,9 +89,6 @@ void beginBuzzer() {
 void readButton(uint32_t now_ms) {
   bool rawState = digitalRead(PIN_BUTTON);
 
-  //Serial.print(F("button input: "));
-  //Serial.println(rawState);
-
   if (rawState != lastRawButtonState) {
     lastDebounceTime_ms = now_ms; // reading changed, restart the debounce window
   }
